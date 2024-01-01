@@ -1,0 +1,158 @@
+<%- include('partials/header.ejs') %>
+
+<!-- Your form for entering a word -->
+<!-- Your form for entering a word -->
+<div class="word-input">
+  <form action="/request" method="POST">
+    <input type="text" name="word" placeholder="Enter a word" id="search"/>
+    <input type="submit" value="Submit" name="btn" />
+    <button type="submit" name="btn" class="search-button">
+      <i class="fa-solid fa-magnifying-glass"></i>
+    </button>
+  </form>
+</div>
+
+
+<% if (locals.content) { %>
+  <!-- Display the word definition and phonetic text -->
+  <div class="word-def">
+    <h2>Word Definition</h2>
+    <p><b>Word-</b> <%= content[0] ? content[0].word : "N/A" %></p>
+    <ul>
+      <% if (content[0] && content[0].phonetics) { %>
+        <% content[0].phonetics.forEach(phonetic => { %>
+          <% if (phonetic.text) { %>
+            <li>Text: <%= phonetic.text %></li>
+          <% } %>
+        <% }); %>
+      <% } else { %>
+        <!-- Word not found message -->
+        <div class="word-not-found">
+          <p>The word "<%= locals.searchedWord %>" was not found. Please try another word.</p>
+        </div>
+<% } %>
+    </ul>
+  </div>
+
+  <!-- -----------Audio------------- -->
+  <div class="audio">
+    <h3>Audio</h3>
+    <ul>
+      <% if (content && content[0].phonetics) { %>
+        <% content[0].phonetics.forEach(phonetic => { %>
+          <% if (phonetic.audio) { %>
+            <li>Audio:<a href="<%= phonetic.audio %>" target="_blank">Listen</a></li>
+          <% } %>
+        <% }); %>
+      <% } else { %>
+        <!-- Word not found message -->
+       <div class="word-not-found">
+    <p>The word "<%= locals.searchedWord %>" was not found. Please try another word.</p>
+  </div>
+      <% } %>
+    </ul>
+  </div>
+  <!--------------definition and example------------->
+  <div class="def-example">
+    <% if (content && content[0].meanings) { %>
+      <h2>Word Meanings</h2>
+      <ol>
+        <% content[0].meanings.forEach(meaning => { %>
+          <li>
+            <h3>Part of Speech: <%= meaning.partOfSpeech %></h3>
+          </li>
+          <ul>
+            <% meaning.definitions.forEach(wordDefinitions => { %>
+              <li>Definition: <%= wordDefinitions.definition %></li>
+              <li>Example: <%= wordDefinitions.example || "N/A" %></li>
+            <% }) %>
+          </ul>
+        <% }) %>
+      </ol>
+    <% } else { %>
+      <!-- Word not found message -->
+     <div class="word-not-found">
+    <p>The word "<%= locals.searchedWord %>" was not found. Please try another word.</p>
+  </div>
+    <% } %>
+  </div>
+  <!------------------Synonyms and antonyms----------------->
+  <div class="synon-anton">
+    <h2>Synonyms and Antonyms</h2>
+    <ul>
+      <% if (content[0] && content[0].meanings && Array.isArray(content[0].meanings)) { %>
+        <% content[0].meanings.forEach(synonAnton => { %>
+          <% if (synonAnton.synonyms && synonAnton.synonyms.length) { %>
+            <li>Synonyms: <%= synonAnton.synonyms.join(', ') %></li>
+          <% } %>
+          <% if (synonAnton.antonyms && synonAnton.antonyms.length) { %>
+            <li>Antonyms: <%= synonAnton.antonyms.join(', ') %></li>
+          <% } %>
+        <% }); %>
+      <% } else { %>
+        <!-- Word not found message -->
+        <div class="word-not-found">
+    <p>The word "<%= locals.searchedWord %>" was not found. Please try another word.</p>
+  </div>
+      <% } %>
+    </ul>
+  </div>
+<% } else { %>
+  <!-- Word not found message -->
+  <div class="word-not-found">
+    <p>The word "<%= locals.searchedWord %>" was not found. Please try another word.</p>
+  </div>
+<% } %>
+
+<!-- =========cards=========== -->
+<div class="card-container">
+  <div class="card">
+    <div class="face face1 quotes">
+      <h2>Quotes and Proverbs</h2>
+      <p>
+        "The only way to do great work is to love what you do." -<span class="aurthor"> Steve Jobs</span><br>
+        
+        "Proverbs are the palm oil with which words are eaten." - <span class="aurthor">Chinua Achebe</span>
+      </p>
+      <a href="#search" >Learn more</a>
+    </div>
+    <div class="face face2">
+      <h2>Quotes</h2>
+    </div>
+  </div>
+  <div class="card">
+    <div class="face face1 featured-word">
+      <h2>Key Vocabulary</h2>
+      <ul>
+        <li>Serendipity</li>
+        <li>Ephemeral</li>
+        <li>Mellifluous</li>
+        <li>Ephemeral</li>
+        <li>Quixotic</li>
+      </ul>
+
+      <a href="#search">Learn more</a>
+    </div>
+    <div class="face face2">
+      <h2>Featured Words</h2>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="face face1 grammar">
+      <h2>Writing Essentials</h2>
+      <ul>
+        <li>Use proper punctuation to clarify your sentences.</li>
+        <li>Avoid run-on sentences by using commas or periods.</li>
+        <li>Subject-verb agreement is crucial for sentence correctness.</li>
+      </ul>
+      <a href="#search" >Learn More</a>
+    </div>
+    <div class="face face2">
+      <h2>Grammar Tips</h2>
+    </div>
+  </div>
+</div>
+
+
+<%- include('partials/footer.ejs') %>
